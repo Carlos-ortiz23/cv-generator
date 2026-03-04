@@ -44,9 +44,9 @@ export function addExperience() {
     </div>
     <div class="space-y-2">
       <label class="text-sm font-medium text-blue-600 dark:text-blue-300">Logros Clave</label>
-      <div class="flex gap-2">
+      <div class="flex flex-col sm:flex-row gap-2">
         <input type="text" id="exp-achievement-${index}" placeholder="Ej: Incrementé eficiencia 30%" class="flex-1 px-3 py-2 border border-blue-200 dark:border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300 dark:focus:ring-slate-500 bg-white dark:bg-slate-700 text-blue-900 dark:text-white" data-action="exp-array-input" data-exp-index="${index}" data-field="keyAchievements">
-        <button type="button" data-action="add-exp-item" data-exp-index="${index}" data-field="keyAchievements" data-input-id="exp-achievement-${index}" class="px-3 py-2 border border-blue-200 dark:border-slate-600 rounded-md hover:bg-blue-50 dark:hover:bg-slate-600">
+        <button type="button" data-action="add-exp-item" data-exp-index="${index}" data-field="keyAchievements" data-input-id="exp-achievement-${index}" class="px-3 py-2 border border-blue-200 dark:border-slate-600 rounded-md hover:bg-blue-50 dark:hover:bg-slate-600 flex-shrink-0">
           <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
         </button>
       </div>
@@ -55,9 +55,9 @@ export function addExperience() {
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div class="space-y-2">
         <label class="text-sm font-medium text-blue-600 dark:text-blue-300">Tech Stack</label>
-        <div class="flex gap-2">
+        <div class="flex flex-col sm:flex-row gap-2">
           <input type="text" id="exp-tech-${index}" placeholder="Ej: React, Node.js..." class="flex-1 px-3 py-2 border border-blue-200 dark:border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300 dark:focus:ring-slate-500 bg-white dark:bg-slate-700 text-blue-900 dark:text-white" data-action="exp-array-input" data-exp-index="${index}" data-field="techStack">
-          <button type="button" data-action="add-exp-item" data-exp-index="${index}" data-field="techStack" data-input-id="exp-tech-${index}" class="px-3 py-2 border border-blue-200 dark:border-slate-600 rounded-md hover:bg-blue-50 dark:hover:bg-slate-600">
+          <button type="button" data-action="add-exp-item" data-exp-index="${index}" data-field="techStack" data-input-id="exp-tech-${index}" class="px-3 py-2 border border-blue-200 dark:border-slate-600 rounded-md hover:bg-blue-50 dark:hover:bg-slate-600 flex-shrink-0">
             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
           </button>
         </div>
@@ -65,9 +65,9 @@ export function addExperience() {
       </div>
       <div class="space-y-2">
         <label class="text-sm font-medium text-blue-600 dark:text-blue-300">Herramientas</label>
-        <div class="flex gap-2">
+        <div class="flex flex-col sm:flex-row gap-2">
           <input type="text" id="exp-tools-${index}" placeholder="Ej: Git, Docker..." class="flex-1 px-3 py-2 border border-blue-200 dark:border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300 dark:focus:ring-slate-500 bg-white dark:bg-slate-700 text-blue-900 dark:text-white" data-action="exp-array-input" data-exp-index="${index}" data-field="tools">
-          <button type="button" data-action="add-exp-item" data-exp-index="${index}" data-field="tools" data-input-id="exp-tools-${index}" class="px-3 py-2 border border-blue-200 dark:border-slate-600 rounded-md hover:bg-blue-50 dark:hover:bg-slate-600">
+          <button type="button" data-action="add-exp-item" data-exp-index="${index}" data-field="tools" data-input-id="exp-tools-${index}" class="px-3 py-2 border border-blue-200 dark:border-slate-600 rounded-md hover:bg-blue-50 dark:hover:bg-slate-600 flex-shrink-0">
             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
           </button>
         </div>
