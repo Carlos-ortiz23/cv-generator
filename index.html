@@ -13,7 +13,7 @@
     }
   </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 via-blue-100 to-slate-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 min-h-screen transition-colors duration-300" data-theme="light">
+<body class="bg-gradient-to-br from-blue-50 via-blue-100 to-slate-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 min-h-screen transition-colors duration-300 pb-20" data-theme="light">
   <!-- Header -->
   <header class="bg-white dark:bg-slate-800 border-b border-blue-200 dark:border-slate-700 shadow-sm sticky top-0 z-10 transition-colors duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -22,7 +22,7 @@
           <div class="text-white p-2 rounded-lg transition-colors duration-300">
             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 7 12c0 4.477 3.79 8 8.542 8 0 4.477-3.79-8-8.542-8 0-4.477 3.79-8 8.542-8 0-.39.004.02-.01.003-.003z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 7 12c0 4.477 3.79 8 8.542 8 0 4.477-3.79-8-8.542-8 0-.39.004.02-.01.003-.003z"></path>
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 12l-6.91 1.04L12 22l-3.09-6.26L2 12l6.91-1.04L12 2z"></path>
             </svg>
           </div>
@@ -31,31 +31,13 @@
             <p class="text-sm text-blue-600 dark:text-blue-200 transition-colors duration-300">by COIAM</p>
           </div>
         </div>
-        <div class="flex items-center gap-3">
-          <!-- Theme Toggle Button -->
-          <button type="button" id="themeToggle" class="relative p-2 rounded-lg border border-blue-300 dark:border-slate-600 bg-white dark:bg-slate-700 hover:bg-blue-50 dark:hover:bg-slate-600 transition-all duration-300 group">
-            <div class="relative w-6 h-6">
-              <!-- Sun Icon (Light) -->
-              <svg class="absolute inset-0 w-6 h-6 text-yellow-500 transition-all duration-300 group-hover:rotate-180" id="sunIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-              </svg>
-              <!-- Moon Icon (Dark) -->
-              <svg class="absolute inset-0 w-6 h-6 text-stone-700 dark:text-slate-300 transition-all duration-300 opacity-0 rotate-90" id="moonIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-              </svg>
-            </div>
-          </button>
-          <button id="togglePreview" class="lg:hidden border border-blue-300 dark:border-slate-600 px-3 py-1.5 rounded-md text-sm hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors duration-300">
-            Vista Previa
-          </button>
-        </div>
       </div>
     </div>
   </header>
 
   <!-- Main Content -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
-    <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 lg:gap-6 xl:gap-8 justify-items-center">
+    <div class="grid grid-cols-1 xl:grid-cols-1 justify-center">
       <!-- Form Section -->
       <div id="formSection" class="xl:col-span-2">
         <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-blue-200 dark:border-slate-700 p-4 sm:p-6 transition-colors duration-300">
@@ -262,9 +244,6 @@
 
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row gap-3 pt-4 sm:pt-6 border-t border-blue-200 dark:border-slate-700 mt-4 sm:mt-6 transition-colors duration-300">
-              <button type="button" id="previewBtn" class="flex-1 py-2.5 px-4 border border-blue-300 dark:border-slate-600 rounded-md hover:bg-blue-50 dark:hover:bg-slate-700 text-blue-700 dark:text-blue-200 font-medium transition-colors duration-300">
-                Vista Previa
-              </button>
               <button type="button" id="downloadBtn" class="flex-1 py-2.5 px-4 bg-blue-700 dark:bg-green-600 hover:bg-blue-800 dark:hover:bg-green-700 text-white rounded-md font-medium transition-colors duration-300">
                 Descargar CV (PDF)
               </button>
@@ -273,31 +252,12 @@
         </div>
       </div>
 
-      <!-- Preview -->
-      <div id="previewSection" class="hidden">
-        <div class="sticky top-20 lg:top-24">
-          <div class="bg-blue-100 dark:bg-slate-700 rounded-xl p-4 shadow-sm border border-blue-200 dark:border-slate-600 transition-colors duration-300">
-            <div class="flex items-center justify-between mb-3">
-              <h2 class="text-sm font-semibold text-blue-700 dark:text-blue-200">Vista Previa</h2>
-              <span class="text-xs text-blue-500 dark:text-blue-300">Formato A4 • Estilo Harvard</span>
-            </div>
-            <div class="overflow-auto max-h-[calc(100vh-250px)] lg:max-h-[calc(100vh-200px)] bg-blue-50 dark:bg-slate-800 rounded-lg p-4 transition-colors duration-300">
-              <div id="cvPreview" class="bg-white dark:bg-slate-900 w-full max-w-[210mm] mx-auto shadow-lg" style="min-height: 297mm; padding: 15mm;">
-                <!-- Preview content will be rendered here -->
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Footer -->
-  <footer class="bg-white dark:bg-slate-800 border-t border-blue-200 dark:border-slate-700 mt-8 sm:mt-12 transition-colors duration-300">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-      <p class="text-center text-sm text-blue-600 dark:text-blue-300 transition-colors duration-300">
-        CV Generator 2026 - CarlosDev by COIAM
-      </p>
+  <footer class="bg-white dark:bg-slate-800 border-t border-blue-200 dark:border-slate-700 py-6 transition-colors duration-300 bottom-0 left-0 right-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center text-sm text-blue-600 dark:text-blue-200">
+        <p> 2024 CV Generator by COIAM. Todos los derechos reservados.</p>
+      </div>
     </div>
   </footer>
 
