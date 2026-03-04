@@ -7,23 +7,17 @@ export function togglePreview() {
   if (!formSection || !previewSection) return;
 
   if (previewSection.classList.contains('hidden')) {
-    // Show preview - hide form on mobile, show both on desktop
+    // Show preview - hide form on mobile/tablet, show both on desktop
     if (window.innerWidth < 1280) { // xl breakpoint
       formSection.classList.add('hidden');
-      previewSection.classList.remove('hidden');
-      previewSection.classList.remove('xl:block');
-      previewSection.classList.add('block');
-    } else {
-      previewSection.classList.remove('hidden');
     }
+    previewSection.classList.remove('hidden');
     const btn = document.getElementById('togglePreview');
     if (btn) btn.textContent = 'Ocultar';
   } else {
     // Hide preview - show form
     formSection.classList.remove('hidden');
     previewSection.classList.add('hidden');
-    previewSection.classList.remove('block');
-    previewSection.classList.add('xl:block');
     const btn = document.getElementById('togglePreview');
     if (btn) btn.textContent = 'Vista Previa';
   }

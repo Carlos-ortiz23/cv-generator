@@ -5,12 +5,12 @@ export function initTabs() {
 
       // Update button states
       document.querySelectorAll('.tab-btn').forEach((b) => {
-        b.classList.remove('bg-white', 'dark:bg-slate-600', 'text-stone-700', 'dark:text-white', 'shadow-sm');
-        b.classList.add('text-stone-600', 'dark:text-stone-300', 'hover:bg-stone-50', 'dark:hover:bg-slate-600');
+        b.classList.remove('bg-white', 'dark:bg-slate-600', 'text-blue-700', 'dark:text-white', 'shadow-sm');
+        b.classList.add('text-blue-600', 'dark:text-blue-200');
       });
       
-      btn.classList.remove('text-stone-600', 'dark:text-stone-300', 'hover:bg-stone-50', 'dark:hover:bg-slate-600');
-      btn.classList.add('bg-white', 'dark:bg-slate-600', 'text-stone-700', 'dark:text-white', 'shadow-sm');
+      btn.classList.remove('text-blue-600', 'dark:text-blue-200');
+      btn.classList.add('bg-white', 'dark:bg-slate-600', 'text-blue-700', 'dark:text-white', 'shadow-sm');
 
       // Update content visibility
       document.querySelectorAll('.tab-content').forEach((content) => {
