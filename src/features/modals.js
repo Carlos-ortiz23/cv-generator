@@ -1,12 +1,255 @@
 import { showPreview } from './preview.js';
+import { state } from '../state/store.js';
+import { generatePDF } from './pdf.js';
+
+// Función para generar el contenido del CV en formato PDF
+function generateCVPreviewContent() {
+  const form = document.getElementById('cvForm');
+  if (!form) return '<p>Error: No se encontró el formulario</p>';
+
+  const formData = new FormData(form);
+
+  const personalInfo = {
+    fullName: formData.get('fullName') || 'Tu Nombre',
+    title: formData.get('title') || 'Tu Título Profesional',
+    location: formData.get('location') || '',
+    phone: formData.get('phone') || '',
+    email: formData.get('email') || '',
+    linkedin: formData.get('linkedin') || '',
+    github: formData.get('github') || ''
+  };
+
+  const profile = formData.get('profile') || '';
+
+  // Debug: Verificar el estado de experiencia
+  console.log('Estado de experiencia:', state.experience);
+
+  // Generar contenido del CV con el mismo estilo que el PDF
+  let cvContent = `
+    <div class="bg-white p-8" style="font-family: Arial, sans-serif; color: #333; line-height: 1.4;">
+  `;
+
+  // Header con foto a la derecha e información personal en el área del documento
+  if (state.profilePhoto) {
+    cvContent += `
+      <div style="display: flex; align-items: flex-start; gap: 24px; margin-bottom: 24px; border-bottom: 1px solid #ccc; padding-bottom: 24px;">
+        <div style="flex: 1;">
+          <h1 style="font-size: 24px; font-weight: bold; margin: 0 0 8px 0; color: #282828;">${personalInfo.fullName}</h1>
+          <p style="font-size: 16px; margin: 0 0 8px 0; color: #505050; font-weight: normal;">${personalInfo.title}</p>
+    `;
+  } else {
+    cvContent += `
+      <div style="display: flex; align-items: flex-start; gap: 24px; margin-bottom: 24px; border-bottom: 1px solid #ccc; padding-bottom: 24px;">
+        <div style="flex: 1;">
+          <h1 style="font-size: 24px; font-weight: bold; margin: 0 0 8px 0; color: #282828;">${personalInfo.fullName}</h1>
+          <p style="font-size: 16px; margin: 0 0 8px 0; color: #505050; font-weight: normal;">${personalInfo.title}</p>
+    `;
+  }
+
+  // Información de contacto
+  const contactParts = [];
+  if (personalInfo.location) contactParts.push(personalInfo.location);
+  if (personalInfo.phone) contactParts.push(personalInfo.phone);
+  if (personalInfo.email) contactParts.push(personalInfo.email);
+
+  if (contactParts.length > 0) {
+    cvContent += `<p style="font-size: 12px; margin: 0 0 4px 0; color: #505050;">${contactParts.join(' | ')}</p>`;
+  }
+
+  // Links
+  const linkParts = [];
+  if (personalInfo.linkedin) linkParts.push(`<a href="${personalInfo.linkedin}" style="color: #0064c8;">LinkedIn</a>`);
+  if (personalInfo.github) linkParts.push(`<a href="${personalInfo.github}" style="color: #0064c8;">GitHub</a>`);
+
+  if (linkParts.length > 0) {
+    cvContent += `<p style="font-size: 12px; margin: 0; color: #0064c8;">${linkParts.join(' | ')}</p>`;
+  }
+
+  // Foto a la derecha
+  if (state.profilePhoto) {
+    cvContent += `
+        </div>
+        <div style="width: 140px; display: flex; justify-content: flex-end;">
+          <img src="${state.profilePhoto}" style="width: 140px; height: 140px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;">
+        </div>
+      </div>
+    `;
+  } else {
+    cvContent += `
+        </div>
+      </div>
+    `;
+  }
+
+  // Línea separadora
+  cvContent += `<div style="border-top: 1px solid #ccc; margin-bottom: 8px;"></div>`;
+
+  // Perfil Profesional
+  if (profile) {
+    cvContent += `
+      <div style="margin-bottom: 24px;">
+        <h2 style="font-size: 14px; font-weight: bold; margin: 0 0 4px 0; color: #3c3c3c; text-transform: uppercase;">PERFIL PROFESIONAL</h2>
+        <div style="border-top: 1px solid #ccc; margin-bottom: 5px;"></div>
+        <p style="font-size: 12px; margin: 0; color: #505050; line-height: 1.5; text-align: justify;">${profile}</p>
+      </div>
+    `;
+  }
+
+  // Competencias
+  if (state.technicalSkills.length > 0 || state.softSkills.length > 0) {
+    cvContent += `
+      <div style="margin-bottom: 24px;">
+        <h2 style="font-size: 14px; font-weight: bold; margin: 0 0 4px 0; color: #3c3c3c; text-transform: uppercase;">COMPETENCIAS</h2>
+        <div style="border-top: 1px solid #ccc; margin-bottom: 5px;"></div>
+    `;
+
+    if (state.technicalSkills.length > 0) {
+      cvContent += `
+        <div style="margin-bottom: 3px;">
+          <span style="font-size: 11px; font-weight: bold; color: #646464;">Técnicas:</span>
+          <span style="font-size: 11px; color: #505050; margin-left: 18px;">${state.technicalSkills.join(' • ')}</span>
+        </div>
+      `;
+    }
+
+    if (state.softSkills.length > 0) {
+      cvContent += `
+        <div style="margin-bottom: 5px;">
+          <span style="font-size: 11px; font-weight: bold; color: #646464;">Blandas:</span>
+          <span style="font-size: 11px; color: #505050; margin-left: 18px;">${state.softSkills.join(' • ')}</span>
+        </div>
+      `;
+    }
+
+    cvContent += `</div>`;
+  }
+
+  // Experiencia Profesional - Obtener datos del estado (ya que el formulario no está sincronizado)
+  const experienceData = state.experience;
+  
+  console.log('Experience data desde estado:', experienceData);
+
+  const validExperience = experienceData.filter((exp) => exp.role || exp.company);
+  if (validExperience.length > 0) {
+    cvContent += `
+      <div style="margin-bottom: 24px;">
+        <h2 style="font-size: 14px; font-weight: bold; margin: 0 0 4px 0; color: #3c3c3c; text-transform: uppercase;">EXPERIENCIA PROFESIONAL</h2>
+        <div style="border-top: 1px solid #ccc; margin-bottom: 5px;"></div>
+    `;
+
+    validExperience.forEach((exp) => {
+      cvContent += `
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
+            <div>
+              <h3 style="font-size: 12px; font-weight: bold; margin: 0; color: #323232;">${exp.role}</h3>
+              <p style="font-size: 12px; margin: 0; color: #505050; font-style: italic;">${exp.company}</p>
+            </div>
+            <span style="font-size: 12px; color: #787878; font-style: italic;">${exp.period}</span>
+          </div>
+      `;
+
+      if (exp.description) {
+        cvContent += `<p style="font-size: 11px; margin: 0 0 2px 0; color: #505050; line-height: 1.4;">${exp.description}</p>`;
+      }
+
+      if (exp.keyAchievements.length > 0) {
+        cvContent += `
+          <div style="margin-bottom: 2px;">
+            <h4 style="font-size: 10px; font-weight: bold; margin: 0 0 1px 0; color: #646464;">Logros Clave:</h4>
+            <ul style="font-size: 10px; margin: 0; padding-left: 12px; color: #505050;">
+              ${exp.keyAchievements.map(achievement => `<li style="margin-bottom: 1px;">${achievement}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+      }
+
+      const techParts = [];
+      if (exp.techStack.length > 0) techParts.push(exp.techStack.join(', '));
+      if (exp.tools.length > 0) techParts.push(exp.tools.join(', '));
+
+      if (techParts.length > 0) {
+        cvContent += `<p style="font-size: 10px; margin: 4px 0 0 0; color: #787878;">${techParts.join(' | ')}</p>`;
+      }
+
+      cvContent += `</div>`;
+    });
+
+    cvContent += `</div>`;
+  }
+
+  // Educación - Obtener datos del estado
+  const educationData = state.education;
+  
+  console.log('Education data desde estado:', educationData);
+
+  const validEducation = educationData.filter((edu) => edu.degree || edu.institution);
+  if (validEducation.length > 0) {
+    cvContent += `
+      <div style="margin-bottom: 24px;">
+        <h2 style="font-size: 14px; font-weight: bold; margin: 0 0 4px 0; color: #3c3c3c; text-transform: uppercase;">EDUCACIÓN</h2>
+        <div style="border-top: 1px solid #ccc; margin-bottom: 5px;"></div>
+    `;
+
+    validEducation.forEach((edu) => {
+      cvContent += `
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 3px;">
+            <div>
+              <h3 style="font-size: 12px; font-weight: bold; margin: 0; color: #323232;">${edu.degree}</h3>
+              <p style="font-size: 12px; margin: 0; color: #505050;">${edu.institution}</p>
+              <p style="font-size: 11px; margin: 0; color: #787878;">${edu.location}</p>
+            </div>
+            <span style="font-size: 12px; color: #787878; font-style: italic;">${edu.period}</span>
+          </div>
+        </div>
+      `;
+    });
+
+    cvContent += `</div>`;
+  }
+
+  // Idiomas - Obtener datos del estado
+  const languagesData = state.languages;
+  
+  console.log('Languages data desde estado:', languagesData);
+
+  const validLanguages = languagesData.filter((lang) => lang.language);
+  if (validLanguages.length > 0) {
+    cvContent += `
+      <div>
+        <h2 style="font-size: 14px; font-weight: bold; margin: 0 0 4px 0; color: #3c3c3c; text-transform: uppercase;">IDIOMAS</h2>
+        <div style="border-top: 1px solid #ccc; margin-bottom: 5px;"></div>
+        <p style="font-size: 12px; margin: 0; color: #505050;">
+          ${validLanguages.map(lang => `${lang.language} — ${lang.level}`).join('    ')}
+        </p>
+      </div>
+    `;
+  }
+
+  cvContent += `</div>`;
+  return cvContent;
+}
 
 // Modal System
-export function createModal(title, content, actions = []) {
+export function createModal(title, content, actions = [], size = 'md') {
   // Remove existing modals
   const existingModal = document.getElementById('modalOverlay');
   if (existingModal) {
     existingModal.remove();
   }
+
+  // Size classes
+  const sizeClasses = {
+    sm: 'max-w-sm',
+    md: 'max-w-md', 
+    lg: 'max-w-lg',
+    xl: 'max-w-xl',
+    '2xl': 'max-w-2xl',
+    '3xl': 'max-w-3xl',
+    '4xl': 'max-w-4xl',
+    full: 'max-w-full mx-4'
+  };
 
   // Create modal overlay
   const modalOverlay = document.createElement('div');
@@ -15,11 +258,11 @@ export function createModal(title, content, actions = []) {
   
   // Create modal container
   const modalContainer = document.createElement('div');
-  modalContainer.className = 'bg-white dark:bg-slate-800 rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto border border-blue-200 dark:border-slate-700';
+  modalContainer.className = `bg-white dark:bg-slate-800 rounded-xl shadow-xl ${sizeClasses[size]} w-full max-h-[90vh] overflow-y-auto border border-blue-200 dark:border-slate-700`;
   
   // Create modal header
   const modalHeader = document.createElement('div');
-  modalHeader.className = 'border-b border-blue-200 dark:border-slate-700 px-6 py-4';
+  modalHeader.className = 'border-b border-blue-200 dark:border-slate-700 px-6 py-4 sticky top-0 bg-white dark:bg-slate-800 z-10';
   modalHeader.innerHTML = `
     <div class="flex items-center justify-between">
       <h3 class="text-lg font-semibold text-blue-900 dark:text-white">${title}</h3>
@@ -38,7 +281,7 @@ export function createModal(title, content, actions = []) {
   
   // Create modal footer with actions
   const modalFooter = document.createElement('div');
-  modalFooter.className = 'border-t border-blue-200 dark:border-slate-700 px-6 py-4 flex gap-3 justify-end';
+  modalFooter.className = 'border-t border-blue-200 dark:border-slate-700 px-6 py-4 flex gap-3 justify-end sticky bottom-0 bg-white dark:bg-slate-800';
   
   actions.forEach(action => {
     const button = document.createElement('button');
@@ -260,48 +503,29 @@ export function showClearFormModal(onConfirm) {
 }
 
 export function showPreviewModal() {
+  const cvContent = generateCVPreviewContent();
+  
   return createModal(
     'Vista Previa del CV',
-    `
-      <div class="space-y-4">
-        <div class="flex items-start gap-3">
-          <div class="flex-shrink-0">
-            <svg class="h-6 w-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 7 12 7c4.477 0 8.268.943 9.542 5-1.274 4.057-5.065 5-9.542 5-4.477 0-8.268-.943-9.542-5z"></path>
-            </svg>
-          </div>
-          <div class="flex-1">
-            <p class="text-gray-700 dark:text-gray-300">
-              La vista previa te mostrará cómo se verá tu CV antes de descargarlo. Podrás revisar el diseño, formato y contenido.
-            </p>
-          </div>
-        </div>
-        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
-          <p class="text-sm text-blue-700 dark:text-blue-300">
-            <strong>Tip:</strong> La vista previa se mostrará en formato A4 como aparecerá en el PDF. Verifica que toda la información sea correcta antes de descargar.
-          </p>
-        </div>
-      </div>
-    `,
+    cvContent,
     [
       {
-        text: 'Cancelar',
+        text: 'Cerrar',
         className: 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300',
         onClick: () => {
           document.getElementById('modalOverlay')?.remove();
         }
       },
       {
-        text: 'Ver Vista Previa',
+        text: 'Descargar PDF',
         className: 'bg-blue-700 dark:bg-blue-600 hover:bg-blue-800 dark:hover:bg-blue-700 text-white',
         onClick: () => {
-          // Cerrar el modal actual primero
+          // Cerrar modal y generar PDF
           document.getElementById('modalOverlay')?.remove();
-          // Mostrar la vista previa real
-          showPreview();
+          generatePDF();
         }
       }
-    ]
+    ],
+    '4xl' // Tamaño grande para mostrar el CV completo
   );
 }

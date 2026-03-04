@@ -61,7 +61,7 @@ export function addExperience() {
             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
           </button>
         </div>
-        <div id="exp-tech-${index}-list" class="flex flex-wrap gap-2"></div>
+        <div id="exp-tech-list-${index}" class="flex flex-wrap gap-2"></div>
       </div>
       <div class="space-y-2">
         <label class="text-sm font-medium text-blue-600 dark:text-blue-300">Herramientas</label>
@@ -71,7 +71,7 @@ export function addExperience() {
             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
           </button>
         </div>
-        <div id="exp-tools-${index}" class="flex flex-wrap gap-2"></div>
+        <div id="exp-tools-list-${index}" class="flex flex-wrap gap-2"></div>
       </div>
     </div>
   `;
@@ -105,8 +105,8 @@ export function removeExperience(index) {
     if (inputs[3]) inputs[3].value = exp.description;
 
     renderExpArrayItems(newIndex, 'keyAchievements', 'exp-achievements');
-    renderExpArrayItems(newIndex, 'techStack', 'exp-techs');
-    renderExpArrayItems(newIndex, 'tools', 'exp-tools');
+    renderExpArrayItems(newIndex, 'techStack', 'exp-tech-list');
+    renderExpArrayItems(newIndex, 'tools', 'exp-tools-list');
   });
 
   updatePreview();
@@ -130,8 +130,8 @@ export function addExpArrayItem(expIndex, field, inputId) {
 
   const containerMap = {
     keyAchievements: 'exp-achievements',
-    techStack: 'exp-techs',
-    tools: 'exp-tools'
+    techStack: 'exp-tech-list',
+    tools: 'exp-tools-list'
   };
 
   renderExpArrayItems(expIndex, field, containerMap[field]);
@@ -143,8 +143,8 @@ export function removeExpArrayItem(expIndex, field, itemIndex) {
 
   const containerMap = {
     keyAchievements: 'exp-achievements',
-    techStack: 'exp-techs',
-    tools: 'exp-tools'
+    techStack: 'exp-tech-list',
+    tools: 'exp-tools-list'
   };
 
   renderExpArrayItems(expIndex, field, containerMap[field]);

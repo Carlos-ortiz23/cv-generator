@@ -119,36 +119,29 @@ async function performPDFGeneration() {
       return y + lineHeight;
     };
 
-    // Header
+    // Header - Foto a la derecha e información personal en el área del documento
     const imgData = state.profilePhoto;
     const imgWidth = 35;
     const imgHeight = 35;
-    const textX = margin + imgWidth + 6;
-    const textWidth = pageWidth - margin - textX;
+    const imgX = pageWidth - margin - imgWidth;
+    const textWidth = imgX - margin - 24;
 
-    try {
-      pdf.addImage(imgData, 'JPEG', margin, yPos, imgWidth, imgHeight);
-    } catch (e) {
-      console.log('Error loading image:', e);
-    }
-
-    pdf.setFontSize(18);
+    // Información personal en el área del documento
+    pdf.setFontSize(20);
     pdf.setFont('helvetica', 'bold');
     pdf.setTextColor(40, 40, 40);
     const nameLines = pdf.splitTextToSize(personalInfo.fullName, textWidth);
-    pdf.text(nameLines, textX, yPos + 8);
+    pdf.text(nameLines, margin, yPos + 8);
 
-    pdf.setFontSize(11);
+    pdf.setFontSize(14);
     pdf.setFont('helvetica', 'normal');
     pdf.setTextColor(80, 80, 80);
     const titleLines = pdf.splitTextToSize(personalInfo.title, textWidth);
-    const titleY = yPos + 8 + nameLines.length * 6;
-    pdf.text(titleLines, textX, titleY);
+    const titleY = yPos + 8 + nameLines.length * 7;
+    pdf.text(titleLines, margin, titleY);
 
-    const headerHeight = Math.max(imgHeight, 8 + nameLines.length * 6 + titleLines.length * 4);
-
-    // Contacto + links alineados a la columna
-    let infoY = titleY + titleLines.length * 4 + 6;
+    // Contacto
+    let infoY = titleY + titleLines.length * 5 + 6;
     const contactParts = [];
     if (personalInfo.location) contactParts.push(personalInfo.location);
     if (personalInfo.phone) contactParts.push(personalInfo.phone);
@@ -157,26 +150,37 @@ async function performPDFGeneration() {
     if (contactParts.length > 0) {
       infoY = renderWrappedLine({
         text: contactParts.join(' | '),
-        x: textX,
+        x: margin,
         y: infoY,
-        maxWidth: textWidth
+        maxWidth: textWidth,
+        fontSize: 10
       });
     }
 
+    // Links
     const linkSegments = [];
     if (personalInfo.linkedin) linkSegments.push({ label: 'LinkedIn', url: personalInfo.linkedin });
     if (personalInfo.github) linkSegments.push({ label: 'GitHub', url: personalInfo.github });
     if (linkSegments.length > 0) {
       infoY = renderLinkLine({
         segments: linkSegments,
-        x: textX,
+        x: margin,
         y: infoY,
-        maxWidth: textWidth
+        maxWidth: textWidth,
+        fontSize: 10
       });
     }
 
-    yPos += Math.max(headerHeight, infoY - 15);
-    yPos += 6;
+    // Foto a la derecha
+    try {
+      pdf.addImage(imgData, 'JPEG', imgX, yPos, imgWidth, imgHeight);
+    } catch (e) {
+      console.log('Error loading image:', e);
+    }
+
+    const headerHeight = Math.max(imgHeight, infoY - yPos + 8);
+
+    yPos += headerHeight + 6;
 
     // Línea separadora
     pdf.setDrawColor(200, 200, 200);
@@ -185,7 +189,7 @@ async function performPDFGeneration() {
 
     // Perfil Profesional
     if (profile) {
-      pdf.setFontSize(10);
+      pdf.setFontSize(12);
       pdf.setFont('helvetica', 'bold');
       pdf.setTextColor(60, 60, 60);
       pdf.text('PERFIL PROFESIONAL', margin, yPos);
@@ -195,51 +199,51 @@ async function performPDFGeneration() {
       pdf.line(margin, yPos, pageWidth - margin, yPos);
       yPos += 5;
 
-      pdf.setFontSize(9);
+      pdf.setFontSize(11);
       pdf.setFont('helvetica', 'normal');
       pdf.setTextColor(80, 80, 80);
       const profileLines = pdf.splitTextToSize(profile, contentWidth);
       pdf.text(profileLines, margin, yPos);
-      yPos += profileLines.length * 4 + 6;
+      yPos += profileLines.length * 5 + 6;
     }
 
     // Competencias
-    if (state.technicalSkills.length > 0 || state.softSkills.length > 0) {
-      pdf.setFontSize(10);
-      pdf.setFont('helvetica', 'bold');
-      pdf.setTextColor(60, 60, 60);
-      pdf.text('COMPETENCIAS', margin, yPos);
-      yPos += 4;
+  if (state.technicalSkills.length > 0 || state.softSkills.length > 0) {
+    pdf.setFontSize(12);
+    pdf.setFont('helvetica', 'bold');
+    pdf.setTextColor(60, 60, 60);
+    pdf.text('COMPETENCIAS', margin, yPos);
+    yPos += 4;
 
       pdf.setDrawColor(200, 200, 200);
       pdf.line(margin, yPos, pageWidth - margin, yPos);
       yPos += 5;
 
-      if (state.technicalSkills.length > 0) {
-        pdf.setFontSize(8);
-        pdf.setFont('helvetica', 'bold');
-        pdf.setTextColor(100, 100, 100);
-        pdf.text('Técnicas:', margin, yPos);
-        pdf.setFont('helvetica', 'normal');
-        pdf.setTextColor(80, 80, 80);
-        const techText = state.technicalSkills.join(' • ');
-        const techLines = pdf.splitTextToSize(techText, contentWidth - 20);
-        pdf.text(techLines, margin + 18, yPos);
-        yPos += techLines.length * 3.5 + 3;
-      }
+    if (state.technicalSkills.length > 0) {
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'bold');
+      pdf.setTextColor(100, 100, 100);
+      pdf.text('Técnicas:', margin, yPos);
+      pdf.setFont('helvetica', 'normal');
+      pdf.setTextColor(80, 80, 80);
+      const techText = state.technicalSkills.join(' • ');
+      const techLines = pdf.splitTextToSize(techText, contentWidth - 20);
+      pdf.text(techLines, margin + 18, yPos);
+      yPos += techLines.length * 4 + 3;
+    }
 
-      if (state.softSkills.length > 0) {
-        pdf.setFontSize(8);
-        pdf.setFont('helvetica', 'bold');
-        pdf.setTextColor(100, 100, 100);
-        pdf.text('Blandas:', margin, yPos);
-        pdf.setFont('helvetica', 'normal');
-        pdf.setTextColor(80, 80, 80);
-        const softText = state.softSkills.join(' • ');
-        const softLines = pdf.splitTextToSize(softText, contentWidth - 20);
-        pdf.text(softLines, margin + 18, yPos);
-        yPos += softLines.length * 3.5 + 5;
-      }
+    if (state.softSkills.length > 0) {
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'bold');
+      pdf.setTextColor(100, 100, 100);
+      pdf.text('Blandas:', margin, yPos);
+      pdf.setFont('helvetica', 'normal');
+      pdf.setTextColor(80, 80, 80);
+      const softText = state.softSkills.join(' • ');
+      const softLines = pdf.splitTextToSize(softText, contentWidth - 20);
+      pdf.text(softLines, margin + 18, yPos);
+      yPos += softLines.length * 4 + 5;
+    }
     }
 
     // Experiencia Profesional
