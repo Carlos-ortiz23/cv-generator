@@ -1,4 +1,4 @@
-import { initTabs, initThemeSelector } from '../features/tabs.js';
+import { initTabs, initThemeToggle } from '../features/tabs.js';
 import { initSkills } from '../features/skills.js';
 import { initEducation, addEducation } from '../features/education.js';
 import { initLanguages, addLanguage } from '../features/languages.js';
@@ -33,7 +33,7 @@ function initStaticListeners() {
 }
 
 export function initApp() {
-  initThemeSelector();
+  initThemeToggle();
   initTabs();
   initDefaultData();
   initStaticListeners();

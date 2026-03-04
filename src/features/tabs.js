@@ -18,31 +18,21 @@ export function initTabs() {
   });
 }
 
-export function initThemeSelector() {
+export function initThemeToggle() {
   // Load saved theme
   const savedTheme = localStorage.getItem('cv-theme') || 'light';
   document.documentElement.setAttribute('data-theme', savedTheme);
   
-  // Set active button
-  document.querySelectorAll('.theme-btn').forEach(btn => {
-    btn.classList.remove('active');
-    if (btn.dataset.theme === savedTheme) {
-      btn.classList.add('active');
-    }
-  });
-
-  // Handle theme changes
-  document.querySelectorAll('.theme-btn').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const theme = btn.dataset.theme;
-      
-      // Update active state
-      document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+  // Handle theme toggle
+  const themeToggle = document.getElementById('themeToggle');
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
       
       // Apply theme
-      document.documentElement.setAttribute('data-theme', theme);
-      localStorage.setItem('cv-theme', theme);
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('cv-theme', newTheme);
     });
-  });
+  }
 }
