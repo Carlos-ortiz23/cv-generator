@@ -1,7 +1,27 @@
 import { jsPDF } from 'jspdf';
 import { state } from '../state/store.js';
+import { showConfirmDownloadModal, showSuccessModal, showValidationErrorModal } from './modals.js';
+import { validateForm } from './validation.js';
 
 export async function generatePDF() {
+  // Validar formulario antes de continuar
+  const validation = validateForm();
+  
+  if (validation.hasCriticalFields) {
+    showValidationErrorModal(
+      'Campos Obligatorios Faltantes',
+      'Por favor completa los campos obligatorios antes de descargar tu CV. Estos campos son esenciales para un perfil profesional.'
+    );
+    return;
+  }
+
+  // Mostrar modal de confirmación
+  showConfirmDownloadModal(async () => {
+    await performPDFGeneration();
+  }, validation.missingFields);
+}
+
+async function performPDFGeneration() {
   const btn = document.getElementById('downloadBtn');
   if (btn) {
     btn.textContent = 'Generando...';
@@ -10,7 +30,10 @@ export async function generatePDF() {
 
   try {
     if (!state.profilePhoto) {
-      alert('La foto de perfil es obligatoria para generar el PDF.');
+      showValidationErrorModal(
+        'Foto de Perfil Requerida',
+        'La foto de perfil es obligatoria para generar el PDF. Por favor sube tu foto profesional.'
+      );
       return;
     }
 
@@ -98,8 +121,8 @@ export async function generatePDF() {
 
     // Header
     const imgData = state.profilePhoto;
-    const imgWidth = 40;
-    const imgHeight = 50;
+    const imgWidth = 35;
+    const imgHeight = 35;
     const textX = margin + imgWidth + 6;
     const textWidth = pageWidth - margin - textX;
 
@@ -370,9 +393,15 @@ export async function generatePDF() {
 
     const fileName = String(personalInfo.fullName).replace(/\s+/g, '_') + '_CV.pdf';
     pdf.save(fileName);
+    
+    // Mostrar modal de éxito
+    showSuccessModal();
   } catch (err) {
     console.error('Error generating PDF:', err);
-    alert('Error al generar el PDF. Por favor intenta de nuevo.');
+    showValidationErrorModal(
+      'Error al Generar PDF',
+      'Ocurrió un error al generar tu CV. Por favor intenta de nuevo o contacta soporte si el problema persiste.'
+    );
   } finally {
     if (btn) {
       btn.textContent = 'Descargar CV (PDF)';
