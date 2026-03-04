@@ -38,13 +38,13 @@
     
     /* Dark Theme */
     [data-theme="dark"] {
-      --bg-primary: #18181b;
-      --bg-secondary: #27272a;
-      --bg-tertiary: #3f3f46;
-      --border-color: #52525b;
-      --text-primary: #fafaf9;
-      --text-secondary: #e4e4e7;
-      --text-tertiary: #a1a1aa;
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-tertiary: #334155;
+      --border-color: #475569;
+      --text-primary: #f1f5f9;
+      --text-secondary: #e2e8f0;
+      --text-tertiary: #94a3b8;
       --accent: #6366f1;
       --accent-hover: #818cf8;
     }
@@ -100,6 +100,34 @@
     [data-theme="light"] #moonIcon {
       opacity: 0;
       transform: rotate(-180deg) scale(0.5);
+    }
+    
+    /* Dark theme improvements */
+    [data-theme="dark"] input,
+    [data-theme="dark"] textarea,
+    [data-theme="dark"] select {
+      background-color: var(--bg-tertiary);
+      color: var(--text-primary);
+      border-color: var(--border-color);
+    }
+    
+    [data-theme="dark"] input:focus,
+    [data-theme="dark"] textarea:focus,
+    [data-theme="dark"] select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+    
+    [data-theme="dark"] .hover\:bg-stone-50:hover {
+      background-color: var(--bg-tertiary);
+    }
+    
+    [data-theme="dark"] .border-dashed {
+      border-color: var(--border-color);
+    }
+    
+    [data-theme="dark"] .text-stone-400 {
+      color: var(--text-tertiary);
     }
     
     /* Improved responsive */
