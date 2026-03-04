@@ -81,9 +81,6 @@ function generateCVPreviewContent() {
     `;
   }
 
-  // Línea separadora
-  cvContent += `<div style="border-top: 1px solid #ccc; margin-bottom: 8px;"></div>`;
-
   // Perfil Profesional
   if (profile) {
     cvContent += `
